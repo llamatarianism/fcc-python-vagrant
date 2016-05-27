@@ -36,13 +36,17 @@ apt-get install openjdk-8-jdk -y --no-install-recommends
 # install jetty
 apt-get install jetty libjetty8-extra-java libjetty8-java libjetty-extra-java libjetty-extra libjetty-java-doc jetty8 libjetty8-java-doc libjetty-java jsvc default-jre-headless apache2-utils adduser -y # wow!
 # install the cli
+echo -------------- Installing Heroku CLI ---------------------------------
 su - vagrant -c "heroku --version > /dev/null 2>&1"
+
+echo -------------- Installing Clojure ------------------------------------
 
 # install leiningen
 su - vagrant << END_OF_LEIN
+echo 'Downloading lein installer...'
 sudo curl -o /usr/local/bin/lein https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > /dev/null 2>&1
 sudo chown vagrant /usr/local/bin/lein
 chmod a+x /usr/local/bin/lein
-cd /vagrant/your-project-here
-lein deps
+echo 'Installing clojure and compojure'
+cd /vagrant/your-project-here && lein deps > /dev/null 2>&1
 END_OF_LEIN
