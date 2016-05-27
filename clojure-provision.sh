@@ -43,6 +43,5 @@ su - vagrant << END_OF_LEIN
 sudo curl -o /usr/local/bin/lein https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > /dev/null 2>&1
 sudo chown vagrant /usr/local/bin/lein
 chmod a+x /usr/local/bin/lein
-cd /vagrant/your-project-here
-lein deps
+cd /vagrant/your-project-here && lein deps > /dev/null 2>&1
 END_OF_LEIN
