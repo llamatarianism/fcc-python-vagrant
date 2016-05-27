@@ -27,7 +27,7 @@ wget -O- https://toolbelt.heroku.com/apt/release.key 2>&1 | apt-key add -
 
 # install jdk
 
-add-apt repository ppa:webupd8team/java
+apt-add-repository ppa:webupd8team/java
 apt-get update
 apt-get install oracle-java8-installer
 
