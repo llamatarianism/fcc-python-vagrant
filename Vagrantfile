@@ -19,5 +19,5 @@ Vagrant.configure("2") do |config|
     end
 
     # Provision the virtual machine.
-    config.vm.provision :shell, :path => "provision.sh"
+    config.vm.provision :shell, :path => "clojure-provision.sh"
 end
