@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
 # installation settings
-PROJECT=my_project # we would want a name passed to it via te first argument, 
-DB=fcc_provision # the name of postgreSQL DB we need to provision, maybe 
-ENV_NAME=fcc-clojure # the vitualenv we would like to create, with Python 3.4
+PROJECT='workspace' # we would want a name passed to it via te first argument, 
+DB='fcc_provision' # the name of postgreSQL DB we need to provision, maybe 
 
 # This file is executed by root user - sudo not needed
 # But do not create any directory
@@ -29,12 +28,12 @@ wget -O- https://toolbelt.heroku.com/apt/release.key 2>&1 | apt-key add -
 apt-get update -y
 apt-get install software-properties-common build-essential dos2unix man curl heroku-toolbelt postgresql postgresql-contrib -y --no-install-recommends
 echo -------------- Installing Java --------------------------------------
-add-apt-repository ppa:openjdk-r/ppa -y
+add-apt-repository ppa:openjdk-r/ppa -y > /dev/null 2>&1
 # This is a must or the next install won't work
 apt-get update -y
 apt-get install openjdk-8-jdk -y --no-install-recommends
 # install jetty
-apt-get install jetty libjetty8-extra-java libjetty8-java libjetty-extra-java libjetty-extra libjetty-java-doc jetty8 libjetty8-java-doc libjetty-java jsvc default-jre-headless apache2-utils adduser -y # wow!
+apt-get install jetty libjetty8-extra-java libjetty8-java libjetty-extra-java libjetty-extra libjetty-java-doc jetty8 libjetty8-java-doc libjetty-java jsvc default-jre-headless apache2-utils adduser -y --no-install-recommends # wow!
 # install the cli
 echo -------------- Installing Heroku CLI ---------------------------------
 su - vagrant -c "heroku --version > /dev/null 2>&1"
@@ -48,5 +47,24 @@ sudo curl -o /usr/local/bin/lein https://raw.githubusercontent.com/technomancy/l
 sudo chown vagrant /usr/local/bin/lein
 chmod a+x /usr/local/bin/lein
 echo 'Installing clojure and compojure'
-cd /vagrant/your-project-here && lein deps > /dev/null 2>&1
+cd /vagrant/${PROJECT} && lein deps > /dev/null 2>&1
 END_OF_LEIN
+
+echo -------------- Setting Up PostgreSQL ------------------------------------
+su - postgres -c "createuser -s vagrant"
+su - vagrant -c "createdb ${DB}"
+
+echo -------------- Setting Up Bashrc ------------------------------------
+su - vagrant -c "cp /vagrant/.bashrc /home/vagrant/"
+su - vagrant -c "mkdir /home/vagrant/.configs"
+su - vagrant -c "cp /vagrant/zeus.sh /home/vagrant/.configs/zeus"
+# If you are on Windows host, with Git checkout windows line terminator style CRLF
+# this comes in handy
+su - vagrant -c "dos2unix  /home/vagrant/.bashrc > /dev/null 2>&1"
+
+# Make sure on first login, user gets to workspace
+echo "cd /vagrant/${PROJECT} >> /home/vagrant/.bashrc"
+
+echo "---------------------------------------------"
+echo " Done! Run vagrant ssh to start working "
+echo "---------------------------------------------"
