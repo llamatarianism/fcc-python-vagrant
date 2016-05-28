@@ -51,6 +51,8 @@ cd /vagrant/${PROJECT} && lein deps > /dev/null 2>&1
 END_OF_LEIN
 
 echo -------------- Setting Up PostgreSQL ------------------------------------
+# TODO: change the password encryption in pg_hba.conf to md5
+# so that authentication works right.
 su - postgres -c "createuser -s vagrant"
 su - vagrant -c "createdb ${DB}"
 
