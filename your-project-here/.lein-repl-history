@@ -1,3 +1,0 @@
-(require '[clojure/java.jdbc :as sql])
-(require compojure)
-(require 'compojure)
